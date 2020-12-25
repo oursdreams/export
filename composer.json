@@ -1,0 +1,26 @@
+{
+  "name": "oursdreams\/export",
+  "description": "A simple export plug-in",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "oursdreams",
+      "email": "z1792524653@163.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Oursdreams\\Export\\": "./src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Oursdreams\\Export\\ExportServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "6.4.0"
+  }
+}
