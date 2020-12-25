@@ -19,8 +19,5 @@
         "Oursdreams\\Export\\ExportServiceProvider"
       ]
     }
-  },
-  "require": {
-    "guzzlehttp/guzzle": "6.4.0"
   }
 }
