@@ -289,7 +289,7 @@ class Export
         if (!$this->name)$this->name = "excel.xlsx";
         $arr = explode(".",$this->name);
         if (count($arr) == 1)$this->name .= ".xlsx";
-        if ($arr[count($arr)-1] != 'xlsx'){
+        if (count($arr)>1 && $arr[count($arr)-1] != 'xlsx'){
             $arr[count($arr)-1] = 'xlsx';
             $this->name = implode(".",$arr);
         }

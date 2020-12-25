@@ -4,7 +4,8 @@
 旨在一个解耦的，高效的导出服务，如果您需要更多的定制化服务应该参阅360EntSecGroup-Skylar/excelize/v2来制作自己的组件
 
 ## 要求
-laravel版本 >= 6.x 或 guzzle版本 >= 6.4
+Export本身并不会携带任何依赖，它完全依赖于laravel自主依赖包
+确保您的composer依赖中存在guzzlehttp/guzzle,一般而言这是laravel项目自带依赖
 使用ORACLE连接时需要建立ORACLE环境(GCC与client)
 
 ## 安装
