@@ -98,7 +98,7 @@ class Export
      * @param string $column
      * @return $this
      */
-    public function datum($column)
+    public function setDatum($column)
     {
         $this->format["datum"] = $column;
         return $this;
@@ -243,13 +243,14 @@ class Export
      * @param array $row
      * @param array $list
      * @throws \Exception|GuzzleException
-     * @return Response
+     * @return Response|bool
      */
     public function json(array $row = [], array $list = [])
     {
         $this->setData($row, $list);
 
         $this->verifyJson();
+        $this->verifyFile();
 
         $http = new Client(['base_uri' => 'http://localhost:9722','timeout'=>2.0]);
         /** @var  $response */
@@ -272,6 +273,107 @@ class Export
         if ($response->getStatusCode() == 500){
             throw new \Exception($response->getHeader("Msg"));
         }
+        return $this->response($response);
+    }
+
+    /**
+     * @throws
+     */
+    private function verifyJson()
+    {
+        if (!$this->data["row"] && !$this->data["list"])
+            throw new \Exception("Data is empty!");
+    }
+
+
+    /**
+     * setting request data to json.
+     *
+     * @param string $sql
+     * @param array $rule
+     * @throws \Exception|GuzzleException
+     * @return Response|bool
+     */
+    public function sql(string $sql, array $rule)
+    {
+        $this->setData([], [], $sql, $rule);
+
+        $this->verifySql();
+        $this->verifyFile();
+
+        $http = new Client(['base_uri' => 'http://localhost:9722','timeout'=>2.0]);
+        /** @var  $response */
+
+        try{
+            $response = $http->request('POST', '/',[
+                'headers'=>[
+                    'Accept'     => 'application/json',
+                ],
+                "json"=>[
+                    'type'   => "unify",
+                    "data"   => $this->data,
+                    "path"   => $this->path,
+                    "format" => $this->format,
+                    "connection" => $this->connection,
+                ]
+            ]);
+        }catch(\Exception $e){
+            throw new \Exception("服务异常！");
+        }
+        if ($response->getStatusCode() == 500){
+            throw new \Exception($response->getHeader("Msg"));
+        }
+        return $this->response($response);
+    }
+
+    /**
+     * @throws
+     */
+    private function verifySql()
+    {
+        if (!$this->data["sql"])throw new \Exception("Data is empty!");
+        if (!isset($this->connection["driver"])   ||
+            !isset($this->connection["host"])     ||
+            !isset($this->connection["port"])     ||
+            !isset($this->connection["database"]) ||
+            !isset($this->connection["username"]) ||
+            !isset($this->connection["password"]))throw new \Exception("No connection specified!");
+        if (isset($this->data["rule"])){
+            foreach ($this->data["rule"] as $key=>$val){
+                if ($val == "date"){
+                    if ($this->connection["driver"] == "mysql")$this->data["rule"][$key] = "mysqlDate";
+                    else $this->data["rule"][$key] = "oracleDate";
+                }
+            }
+        }
+    }
+
+    /**
+     * 验证文件名
+     */
+    private function verifyFile()
+    {
+        if ($this->path["file"]){
+            $basePath = base_path();
+            if (mb_strpos($basePath,$this->path["file"]) === false){
+                $this->path["file"] = base_path($this->path["file"]);
+            }
+        }
+        if (!$this->name)$this->name = "excel.xlsx";
+        $arr = explode(".",$this->name);
+        if (count($arr) == 1)$this->name .= ".xlsx";
+        if (count($arr)>1 && $arr[count($arr)-1] != 'xlsx'){
+            $arr[count($arr)-1] = 'xlsx';
+            $this->name = implode(".",$arr);
+        }
+    }
+
+    private function response($response)
+    {
+        if ($this->path["file"]){
+            if (file_exists($this->path["file"]))return true;
+            return false;
+        }
         return new Response($response->getStatusCode(),[
             "Content-type"=>"application/octet-stream",
             "Content-Disposition"=>"attachment; filename=".$this->name,
@@ -280,19 +382,31 @@ class Export
     }
 
     /**
-     * @throws
+     * setting sql column format date.
+     *
+     * @param string $column
+     *
+     * @return $this
      */
-    private function verifyJson()
+    public function setDateTimeColumn(string $column)
     {
-        if (!$this->data["row"] && !$this->data["list"])throw new \Exception("Data is empty!");
+        if (!isset($this->data["rule"]))$this->data["rule"] = [];
+        $this->data["rule"][$column] = "date";
+        return $this;
+    }
 
-        if (!$this->name)$this->name = "excel.xlsx";
-        $arr = explode(".",$this->name);
-        if (count($arr) == 1)$this->name .= ".xlsx";
-        if (count($arr)>1 && $arr[count($arr)-1] != 'xlsx'){
-            $arr[count($arr)-1] = 'xlsx';
-            $this->name = implode(".",$arr);
-        }
+    /**
+     * setting sql column format percent.
+     *
+     * @param string $column
+     *
+     * @return $this
+     */
+    public function setPercentColumn(string $column)
+    {
+        if (!isset($this->data["rule"]))$this->data["rule"] = [];
+        $this->data["rule"][$column] = "percent";
+        return $this;
     }
 
     /**
