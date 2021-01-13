@@ -14,7 +14,7 @@ $ composer require oursdreams/export -vvv
 ## 服务
 此组件默认9722端口，您应该确保您的9722端口未被占用
 
-$ php artisan export:serve
+$ php artisan export:start
 
 您可以通过 php artisan export 来查看所有可用命令
 
@@ -26,6 +26,14 @@ JSON：
         
 通过传递row与list来指定表头与表身,注意此处list应为二维数组
 
+SQL:
+        $export = new Export();
+        $export->setMysqlConnection($host, $port, $database, $username, $password, $charset, $parsetime)
+        $response = $export->sql($sql, $rule);
+SQL执行时必须设置连接，如特殊需要可通过传递第二个参数$rule来设置数据转换规则
+    例:$rule = ["rate"=>"percent"]; 将rate列转换为百分比展示
+    时间转换：通过魔术方法:setDateTimeColumn来设置时间列格式化为(yyyy-mm-dd HH:ii:ss)
+
 ## 其他
 合并单元格：下方示例将excel的A,B列分别从1行合并至3行
 
@@ -33,6 +41,7 @@ JSON：
         $export->setMergeFormat(["A","B"],["1"=>"3"]);
         
 内部换行：下方示例将excel的A,B列设置为允许内部换行
+        内部换行会将所设置列内"\r\n"识别为换行符执行换行操作
 
         $export = new Export();
         $export->setMergeFormat(["A","B"])->setWarpTextFormat();
