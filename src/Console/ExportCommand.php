@@ -44,6 +44,7 @@ LOGO;
 
         $this->comment('');
         $this->comment('Available commands:');
-        $this->comment('    export:serve');
+        $this->comment('    export:start');
+        $this->comment('    export:stop');
     }
 }
