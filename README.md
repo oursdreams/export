@@ -27,10 +27,12 @@ JSON：
 通过传递row与list来指定表头与表身,注意此处list应为二维数组
 
 SQL:
+
         $export = new Export();
         $export->setMysqlConnection($host, $port, $database, $username, $password, $charset, $parsetime)
         $response = $export->sql($sql, $rule);
 SQL执行时必须设置连接，如特殊需要可通过传递第二个参数$rule来设置数据转换规则
+
     例:$rule = ["rate"=>"percent"]; 将rate列转换为百分比展示
     时间转换：通过魔术方法:setDateTimeColumn来设置时间列格式化为(yyyy-mm-dd HH:ii:ss)
 
