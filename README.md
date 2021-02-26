@@ -34,7 +34,7 @@ SQL:
 SQL执行时必须设置连接，如特殊需要可通过传递第二个参数$rule来设置数据转换规则
 
     例:$rule = ["rate"=>"percent"]; 将rate列转换为百分比展示
-    时间转换：通过魔术方法:setDateTimeColumn来设置时间列格式化为(yyyy-mm-dd HH:ii:ss)
+    时间转换：通过特殊方法:setDateTimeColumn来设置时间列格式化为(yyyy-mm-dd HH:ii:ss)
 
 ## 其他
 合并单元格：下方示例将excel的A,B列分别从1行合并至3行
