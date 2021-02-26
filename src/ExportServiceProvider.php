@@ -5,7 +5,8 @@ namespace Oursdreams\Export;
 
 
 use Oursdreams\Export\Console\ExportCommand;
-use Oursdreams\Export\Console\ServeCommand;
+use Oursdreams\Export\Console\ServeStartCommand;
+use Oursdreams\Export\Console\ServeStopCommand;
 
 class ExportServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -14,7 +15,8 @@ class ExportServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected $commands = [
         ExportCommand::class,
-        ServeCommand::class,
+        ServeStartCommand::class,
+        ServeStopCommand::class,
     ];
 
     public function register()
