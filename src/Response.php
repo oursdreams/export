@@ -54,4 +54,9 @@ class Response
     {
         return $this->body->getSize();
     }
+
+    public function direct()
+    {
+        return response($this->body,$this->status,$this->header);
+    }
 }

@@ -238,6 +238,17 @@ class Export
     }
 
     /**
+     * @param array $row
+     * @param array $list
+     * @param $fileName
+     * @return bool|Response
+     */
+    static function make(array $row = [], array $list = [], $fileName)
+    {
+        return (new static)->setFileName($fileName)->json($row,$list)->direct();
+    }
+
+    /**
      * setting request data to json.
      *
      * @param array $row
