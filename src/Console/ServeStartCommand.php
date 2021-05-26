@@ -34,10 +34,10 @@ class ServeStartCommand extends Command
         }catch(\Exception $e){
             switch (PHP_OS){
                 case "WINNT":
-                    if (!file_exists(dirname(dirname(__FILE__))."\\Go\\windows.exe")){
+                    if (!file_exists(dirname(dirname(__FILE__))."\\Go\\winExport.exe")){
                         echo $this->error("Serve file lost");
                     }else{
-                        pclose(popen("start /b ".dirname(dirname(__FILE__))."\\Go\\windows.exe",'r'));
+                        pclose(popen("start /b ".dirname(dirname(__FILE__))."\\Go\\winExport.exe",'r'));
                         try{
                             fsockopen('127.0.0.1','9722',$error,$errorstr,2);
                             $this->info("Serve start success！");
@@ -48,10 +48,10 @@ class ServeStartCommand extends Command
                     break;
                 //case "Linux"
                 default:
-                    if (!file_exists(dirname(dirname(__FILE__))."\\Go\\linux")){
+                    if (!file_exists(dirname(dirname(__FILE__))."\\Go\\linuxExport")){
                         echo $this->error("Serve file lost");
                     }else{
-                        pclose(popen("nohup ".dirname(dirname(__FILE__))."/Go/linux >> ".dirname(dirname(__FILE__))."/Go/export.log 2>&1 &",'r'));
+                        pclose(popen("nohup ".dirname(dirname(__FILE__))."/Go/linuxExport >> ".dirname(dirname(__FILE__))."/Go/export.log 2>&1 &",'r'));
                         try{
                             fsockopen('127.0.0.1','9722',$error,$errorstr,2);
                             $this->info("Serve start success！");

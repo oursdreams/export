@@ -45,7 +45,7 @@ var param *Param
 func SetParam(request *json.Decoder)*Param{
 	e := request.Decode(&param)
 	if e != nil{
-		WriteLog("传递参数不符合JSON规范!","ERROR")
+		panic(e)
 	}
 	return param
 }

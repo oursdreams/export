@@ -9,7 +9,7 @@ import (
 func query(sqlStr string,db *sql.DB)(list []map[string]string) {
 	rows,err := db.Query(sqlStr)
 	if err != nil {
-		utilities.WriteLog("SQL执行错误!("+sqlStr+")","ERROR")
+		utilities.WriteLog("SQL："+err.Error()+"("+sqlStr+")","ERROR")
 		return
 	}
 	columns, _ := rows.Columns()

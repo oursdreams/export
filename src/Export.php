@@ -279,10 +279,10 @@ class Export
                 ]
             ]);
         }catch(\Exception $e){
-            throw new \Exception("服务异常！");
+            throw new \Exception("服务异常！".$e->getMessage());
         }
-        if ($response->getStatusCode() == 500){
-            throw new \Exception($response->getHeader("Msg"));
+        if ($response->getHeader("Msg")){
+            throw new \Exception($response->getHeader("Msg")[0]);
         }
         return $this->response($response);
     }
@@ -301,13 +301,14 @@ class Export
      * setting request data to json.
      *
      * @param string $sql
+     * @param array $row
      * @param array $rule
      * @throws \Exception|GuzzleException
      * @return Response|bool
      */
-    public function sql(string $sql, array $rule)
+    public function sql(string $sql,array $row = [], array $rule = [])
     {
-        $this->setData([], [], $sql, $rule);
+        $this->setData([], $row, $sql, $rule);
 
         $this->verifySql();
         $this->verifyFile();
@@ -329,10 +330,10 @@ class Export
                 ]
             ]);
         }catch(\Exception $e){
-            throw new \Exception("服务异常！");
+            throw new \Exception("服务异常！".$e->getMessage());
         }
-        if ($response->getStatusCode() == 500){
-            throw new \Exception($response->getHeader("Msg"));
+        if ($response->getHeader("Msg")){
+            throw new \Exception($response->getHeader("Msg")[0]);
         }
         return $this->response($response);
     }

@@ -18,7 +18,6 @@ func Export(w http.ResponseWriter,req *http.Request)  {
 	file := excel.CreateFile(selectModule(p))
 	if errorMsg.GetMsg() != "" {
 		w.Header().Set("Msg",errorMsg.GetMsg())
-		w.WriteHeader(500)
 		return
 	}
 	if p.PATH.FILE != "" {
@@ -44,23 +43,29 @@ func selectModule(param *utilities.Param) (row []interface{}, list [][]interface
 			mergeRow = param.FORMAT.MERGEROW
 			mergeColumn = param.FORMAT.MERGECOLUMN
 		}
+		break
 	case "unify":
-		var column []string
 		data = orm.GetDBData(param.CONNECTION, param.DATA.SQL)
+		row = param.DATA.ROW
+		if len(row)==0 && len(data)>0{
+			for key,_ := range data[0] {
+				row = append(row, key)
+			}
+		}
 		datum := param.FORMAT.DATUM
 		if param.FORMAT.METHOD != "merge" {
 			datum = ""
 		}
-		list, mergeRow = unifyFormat(data, column, param.DATA.RULE, datum)
+		list, mergeRow = unifyFormat(data, row, param.DATA.RULE, datum)
 	}
 	return row,list,mergeRow,mergeColumn,param.FORMAT.METHOD
 }
 
-func unifyFormat(data []map[string]string, row []string, rule map[string]string, datum string) ([][]interface{}, map[string]string){
+func unifyFormat(data []map[string]string, row []interface{}, rule map[string]string, datum string) ([][]interface{}, map[string]string){
 	rowLen := len(row)
 	column :=  make(map[string]int,rowLen)
 	for i,c := range row {
-		column[c] = i
+		column[c.(string)] = i
 	}
 
 	list := make([][]interface{},len(data))
