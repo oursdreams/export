@@ -164,7 +164,7 @@ class Export
      */
     public function setOracleConnection($host, $port, $database, $username, $password, $charset = "utf8mb4", $parsetime = "True")
     {
-        $this->setConnection("mysql", $host, $port, $database, $username, $password, $charset, $parsetime);
+        $this->setConnection("oracle", $host, $port, $database, $username, $password, $charset, $parsetime);
 
         return $this;
     }
@@ -214,12 +214,14 @@ class Export
      * @param array $list
      * @param string $sql
      * @param array $rule
+     * @param array $column
      */
-    protected function setData(array $row = [], array $list = [], $sql = "", array $rule = [])
+    protected function setData(array $row = [], array $list = [], $sql = "", array $rule = [], array $column = [])
     {
         $this->data["row"] = $row;
         $this->data["list"] = $list;
         $this->data["sql"] = $sql;
+        $this->data["column"] = $column;
         if ($rule) $this->data["rule"] = $rule;
     }
 
@@ -241,11 +243,15 @@ class Export
      * @param array $row
      * @param array $list
      * @param $fileName
+     * @param bool $isWarpText
      * @return bool|Response
      */
-    static function make(array $row = [], array $list = [], $fileName)
+    static function make(array $row = [], array $list = [], $fileName, $isWarpText = false)
     {
-        return (new static)->setFileName($fileName)->json($row,$list)->direct();
+        $that = (new static)->setFileName($fileName);
+        if ($isWarpText)$that->setWarpTextFormat();
+
+        return $that->json($row,$list)->direct();
     }
 
     /**
@@ -298,17 +304,23 @@ class Export
 
 
     /**
-     * setting request data to json.
+     * setting request data to sql.
      *
      * @param string $sql
-     * @param array $row
+     * @param array $mapping
      * @param array $rule
      * @throws \Exception|GuzzleException
      * @return Response|bool
      */
-    public function sql(string $sql,array $row = [], array $rule = [])
+    public function sql(string $sql,array $mapping, array $rule = [])
     {
-        $this->setData([], $row, $sql, $rule);
+        $row = [];
+        $column = [];
+        foreach ($mapping as $key=>$val){
+            $row[] = $val;
+            $column[] = $key;
+        }
+        $this->setData($row, [], $sql, $rule, $column);
 
         $this->verifySql();
         $this->verifyFile();
@@ -449,6 +461,7 @@ class Export
                 "row"           => ["sql-row"],
                 "list"          => [["sql-list"]],
                 "sql"           => "sql",
+                "column"        => [],
                 "rule"          => ["sql"=>"rule"],
             ],"path"=>[
                 "log"           => "log",

@@ -46,26 +46,22 @@ func selectModule(param *utilities.Param) (row []interface{}, list [][]interface
 		break
 	case "unify":
 		data = orm.GetDBData(param.CONNECTION, param.DATA.SQL)
-		row = param.DATA.ROW
-		if len(row)==0 && len(data)>0{
-			for key,_ := range data[0] {
-				row = append(row, key)
-			}
-		}
+
+        row = param.DATA.ROW
 		datum := param.FORMAT.DATUM
 		if param.FORMAT.METHOD != "merge" {
 			datum = ""
 		}
-		list, mergeRow = unifyFormat(data, row, param.DATA.RULE, datum)
+		list, mergeRow = unifyFormat(data, param.DATA.COLUMN, param.DATA.RULE, datum)
 	}
 	return row,list,mergeRow,mergeColumn,param.FORMAT.METHOD
 }
 
-func unifyFormat(data []map[string]string, row []interface{}, rule map[string]string, datum string) ([][]interface{}, map[string]string){
+func unifyFormat(data []map[string]string, row []string, rule map[string]string, datum string) ([][]interface{}, map[string]string){
 	rowLen := len(row)
 	column :=  make(map[string]int,rowLen)
 	for i,c := range row {
-		column[c.(string)] = i
+		column[c] = i
 	}
 
 	list := make([][]interface{},len(data))

@@ -26,6 +26,7 @@ type Data struct {
 	LIST 	[][]interface{} 	`json:"list"`
 	SQL 	string 				`json:"sql"`
 	RULE 	map[string]string 	`json:"rule"`
+	COLUMN 	[]string 			`json:"column"`
 }
 type Path struct {
 	LOG 	string `json:"log"`

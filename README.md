@@ -24,6 +24,9 @@ JSON：
         $export = new Export();
         $response = $export->json(["row"],[["list"]]);
         
+        //快捷
+        Export::mark($row,$list,$fileName);
+        
 通过传递row与list来指定表头与表身,注意此处list应为二维数组
 
 SQL:
