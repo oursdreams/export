@@ -51,6 +51,8 @@ func selectModule(param *utilities.Param) (row []interface{}, list [][]interface
 		datum := param.FORMAT.DATUM
 		if param.FORMAT.METHOD != "merge" {
 			datum = ""
+		}else{
+			mergeColumn = param.FORMAT.MERGECOLUMN
 		}
 		list, mergeRow = unifyFormat(data, param.DATA.COLUMN, param.DATA.RULE, datum)
 	}
