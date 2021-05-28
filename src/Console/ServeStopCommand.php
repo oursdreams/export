@@ -29,9 +29,7 @@ class ServeStopCommand extends Command
     public function handle()
     {
         try{
-            fsockopen('127.0.0.1','9722',$error,$errorstr,2);
-            $this->error("The port is Occupied!");
-        }catch(\Exception $e){
+            @fsockopen('127.0.0.1','9722',$error,$errorstr,2);
             switch (PHP_OS){
                 case "WINNT":
                     $this->error("Does not support window！");
@@ -41,6 +39,8 @@ class ServeStopCommand extends Command
                     exec("fuser -k -n tcp 9722",$output,$return);
                     $this->info("Serve stop success！");
             }
+        }catch(\Exception $e){
+            $this->info("Serve stop success！");
         }
     }
 
