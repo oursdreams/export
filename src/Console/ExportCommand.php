@@ -39,6 +39,7 @@ LOGO;
      */
     public function handle()
     {
+        if (PHP_OS != 'WINNT')exec("chmod 775 ".dirname(dirname(__FILE__))."/Go/linuxExport",$output,$return);
         $this->line(static::$logo);
         $this->line("1.0.0-beta");
 
