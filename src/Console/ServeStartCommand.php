@@ -48,12 +48,12 @@ class ServeStartCommand extends Command
                     break;
                 //case "Linux"
                 default:
-                    if (!file_exists(dirname(dirname(__FILE__))."\\Go\\linuxExport")){
+                    if (!file_exists(dirname(dirname(__FILE__))."/Go/linuxExport")){
                         echo $this->error("Serve file lost");
                     }else{
                         pclose(popen("nohup ".dirname(dirname(__FILE__))."/Go/linuxExport >> ".dirname(dirname(__FILE__))."/Go/export.log 2>&1 &",'r'));
                         try{
-                            fsockopen('127.0.0.1','9722',$error,$errorstr,2);
+                            @fsockopen('127.0.0.1','9722',$error,$errorstr,2);
                             $this->info("Serve start success！");
                         }catch(\Exception $e){
                             $this->error("Serve start failure！");
