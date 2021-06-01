@@ -12,6 +12,10 @@ Export本身并不会携带任何依赖，它完全依赖于laravel自主依赖�
 $ composer require oursdreams/export -vvv
 
 ## 服务
+如果您是LINUX环境，需要权限授予，您应该在启动服务前使用命令来初始化赋权
+
+$ php artisan export
+
 此组件默认9722端口，您应该确保您的9722端口未被占用
 
 $ php artisan export:start
