@@ -269,7 +269,7 @@ class Export
         $this->verifyJson();
         $this->verifyFile();
 
-        $http = new Client(['base_uri' => 'http://localhost:9722','timeout'=>0]);
+        $http = new Client(['base_uri' => $this->url,'timeout'=>0]);
         /** @var  $response */
 
         try{
@@ -325,7 +325,7 @@ class Export
         $this->verifySql();
         $this->verifyFile();
 
-        $http = new Client(['base_uri' => 'http://localhost:9722','timeout'=>0]);
+        $http = new Client(['base_uri' => $this->url,'timeout'=>0]);
         /** @var  $response */
 
         try{
